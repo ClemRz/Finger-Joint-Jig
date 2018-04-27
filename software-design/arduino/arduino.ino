@@ -27,7 +27,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
+ 
 #include <AccelStepper.h>
 
 #define RANGE_IN_MM     285   //mm
@@ -42,7 +42,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 AccelStepper stepper; // Defaults to AccelStepper::FULL4WIRE (4 pins) on 2, 3, 4, 5
 
 void setup() {
-  moveQuiclyTo(
+  moveQuiclyTo(142.5);
+  moveSlowly(-20);
+  moveQuiclyTo(RANGE_IN_MM);
+  goHome();
 }
 
 void loop() {
@@ -52,22 +55,51 @@ void goHome(void) {
   moveQuiclyTo(0);
 }
 
-void moveQuiclyTo(int mm) {
-  stepper.setMaxSpeed(FULL_SPEED);
-  stepper.setAcceleration(FULL_ACC);
+void moveQuicly(float mm) {
+  setFast();
+  move(mm);
+}
+
+void moveSlowly(float mm) {
+  setSlow();
+  move(mm);
+}
+
+void moveQuiclyTo(float mm) {
+  setFast();
   moveTo(mm);
 }
 
-void moveSlowlyTo(int mm) {
+void moveSlowlyTo(float mm) {
+  setSlow();
+  moveTo(mm);
+}
+
+void setSlow(void) {
   stepper.setMaxSpeed(LOW_SPEED);
   stepper.setAcceleration(LOW_ACC);
-  moveTo(mm);
 }
 
-void moveTo(int mm) {
-  int steps = mm * STEPS_PER_MM;
-  if (steps <= RANGE_IN_STEPS) {
-    stepper.moveTo(steps);
+void setFast(void) {
+  stepper.setMaxSpeed(FULL_SPEED);
+  stepper.setAcceleration(FULL_ACC);
+}
+
+//Relative position
+void move(float mm) {
+  int index = stepper.currentPosition() + round(mm * STEPS_PER_MM);
+  moveToIndex(index);
+}
+
+//Absolute position
+void moveTo(float mm) {
+  int index = round(mm * STEPS_PER_MM);
+  moveToIndex(index);
+}
+
+void moveToIndex(int index) {
+  if (index >= 0 && index <= RANGE_IN_STEPS) {
+    stepper.moveTo(index);
     stepper.runToPosition();
   }
 }
