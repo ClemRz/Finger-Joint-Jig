@@ -48,6 +48,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define AT_HOME_SW        6
 #define GO_STEP_BT        7
 #define GO_HOME_BT        8
+#define RED_LED           9
+#define GREEN_LED         10
 
 // Buttons management
 #define DEBOUNCE_DELAY_MS 10L
@@ -64,28 +66,35 @@ AccelStepper stepper;
 volatile unsigned long
   _v_lastStepIsrTime =    0,
   _v_lastHomeIsrTime =    0;
-volatile uint8_t _v_nextOperation;
+volatile uint8_t _v_operation = NONE;
 volatile Register
   _v_register = {2.5, 13.0, 150.0, 0};
 
 void setup(void) {
+  initLed();
+  showBusy();
   initI2c();
   initButtons();
   //moveQuiclyTo(142.5);
   //moveSlowly(-20);
   //moveQuiclyTo(RANGE_IN_MM);
   //goHome();
+  showFree();
 }
 
 void loop(void) {
-  switch(_v_nextOperation) {
-    case STEP:
-      goStep();
-      break;
-    case HOMING:
-      goHome();
-      break;
+  if (_v_operation != NONE) {
+    showBusy();
+    switch(_v_operation) {
+      case STEP:
+        goStep();
+        break;
+      case HOMING:
+        goHome();
+        break;
+    }
+    showFree();
+    _v_operation = NONE;
   }
-  _v_nextOperation = NONE;
 }
 

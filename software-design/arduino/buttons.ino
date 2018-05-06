@@ -41,11 +41,11 @@ bool isAtHome(void) {
 }
 
 void isrStepButton(void) {
-  if (millis() - _v_lastStepIsrTime > (unsigned long)DEBOUNCE_DELAY_MS) _v_nextOperation = STEP;
+  if (millis() - _v_lastStepIsrTime > (unsigned long)DEBOUNCE_DELAY_MS) _v_operation = STEP;
   _v_lastStepIsrTime = millis();
 }
 
 void isrHomeButton(void) {
-  if (millis() - _v_lastHomeIsrTime > (unsigned long)DEBOUNCE_DELAY_MS) _v_nextOperation = HOMING;
+  if (millis() - _v_lastHomeIsrTime > (unsigned long)DEBOUNCE_DELAY_MS) _v_operation = HOMING;
   _v_lastHomeIsrTime = millis();
 }

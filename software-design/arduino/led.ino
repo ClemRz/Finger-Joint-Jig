@@ -28,19 +28,18 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-void initI2c(void) {
-  Wire.begin(SLAVE_I2C_ADDRESS);
-  Wire.onReceive(isrOnI2cReceive);
-}
+ void initLed(void) {
+  pinMode(RED_LED, OUTPUT);
+  pinMode(GREEN_LED, OUTPUT);
+ }
 
-void isrOnI2cReceive(int numBytes) {
-  showBusy();
-  uint8_t i = 0;
-  while (Wire.available()) {
-    if (i < REG_MAP_SIZE) { // Read enough bytes to fill the register
-      _v_register.byteAt[i] = Wire.read();
-      i++;
-    } else Wire.read(); // Ignore the rest of it
-  }
-  showFree();
-}
+ void showBusy(void) {
+  digitalWrite(GREEN_LED, LOW);
+  digitalWrite(RED_LED, HIGH);
+ }
+
+ void showFree(void) {
+  digitalWrite(GREEN_LED, HIGH);
+  digitalWrite(RED_LED, LOW);
+ }
+
