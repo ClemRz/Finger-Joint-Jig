@@ -28,64 +28,63 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <Wire.h>
-#include <AccelStepper.h>
-#include "register.h"
-
-// Stepper settings
-#define RANGE_IN_MM       285     //mm
-#define RANGE_IN_STEPS    6850    //steps
-#define STEPS_PER_MM      24.035  //setps/mm = 42µm/step
-#define FULL_SPEED        1200    //1200
-#define LOW_SPEED         100
-#define FULL_ACC          2000    //2000
-#define LOW_ACC           100
-
-// i2c settings
-#define SLAVE_I2C_ADDRESS 0x09
-
-// Pins
-#define AT_HOME_SW        6
-#define GO_STEP_BT        7
-#define GO_HOME_BT        8
-
-// Buttons management
-#define DEBOUNCE_DELAY_MS 10L
-
-// Commands
-#define NONE              0
-#define STEP              1
-#define HOMING            2
-
-// Globals
-AccelStepper stepper;
-
-// Volatiles
-volatile unsigned long
-  _v_lastStepIsrTime =    0,
-  _v_lastHomeIsrTime =    0;
-volatile uint8_t _v_nextOperation;
-volatile Register
-  _v_register = {2.5, 13.0, 150.0, 0};
-
-void setup(void) {
-  initI2c();
-  initButtons();
-  //moveQuiclyTo(142.5);
-  //moveSlowly(-20);
-  //moveQuiclyTo(RANGE_IN_MM);
-  //goHome();
+double getPositionMm(void) {
+  return (double)stepper.currentPosition() / STEPS_PER_MM;
 }
 
-void loop(void) {
-  switch(_v_nextOperation) {
-    case STEP:
-      goStep();
-      break;
-    case HOMING:
-      goHome();
-      break;
+void goHome(void) {
+  setFast();
+  stepper.move(-2 * RANGE_IN_STEPS);
+  while (!isAtHome()) stepper.run();
+  stepper.setMaxSpeed(LOW_SPEED);
+  stepper.stop();
+  stepper.setCurrentPosition(0);
+}
+
+void moveQuicly(double mm) {
+  setFast();
+  move(mm);
+}
+
+void moveSlowly(double mm) {
+  setSlow();
+  move(mm);
+}
+
+void moveQuiclyTo(double mm) {
+  setFast();
+  moveTo(mm);
+}
+
+void moveSlowlyTo(double mm) {
+  setSlow();
+  moveTo(mm);
+}
+
+void setSlow(void) {
+  stepper.setMaxSpeed(LOW_SPEED);
+  stepper.setAcceleration(LOW_ACC);
+}
+
+void setFast(void) {
+  stepper.setMaxSpeed(FULL_SPEED);
+  stepper.setAcceleration(FULL_ACC);
+}
+
+//Relative position
+void move(double mm) {
+  int index = stepper.currentPosition() + round(mm * STEPS_PER_MM);
+  moveToIndex(index);
+}
+
+//Absolute position
+void moveTo(double mm) {
+  int index = round(mm * STEPS_PER_MM);
+  moveToIndex(index);
+}
+
+void moveToIndex(int index) {
+  if (index >= 0 && index <= RANGE_IN_STEPS) {
+    stepper.runToNewPosition(index);
   }
-  _v_nextOperation = NONE;
 }
-

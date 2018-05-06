@@ -28,64 +28,24 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <Wire.h>
-#include <AccelStepper.h>
-#include "register.h"
-
-// Stepper settings
-#define RANGE_IN_MM       285     //mm
-#define RANGE_IN_STEPS    6850    //steps
-#define STEPS_PER_MM      24.035  //setps/mm = 42µm/step
-#define FULL_SPEED        1200    //1200
-#define LOW_SPEED         100
-#define FULL_ACC          2000    //2000
-#define LOW_ACC           100
-
-// i2c settings
-#define SLAVE_I2C_ADDRESS 0x09
-
-// Pins
-#define AT_HOME_SW        6
-#define GO_STEP_BT        7
-#define GO_HOME_BT        8
-
-// Buttons management
-#define DEBOUNCE_DELAY_MS 10L
-
-// Commands
-#define NONE              0
-#define STEP              1
-#define HOMING            2
-
-// Globals
-AccelStepper stepper;
-
-// Volatiles
-volatile unsigned long
-  _v_lastStepIsrTime =    0,
-  _v_lastHomeIsrTime =    0;
-volatile uint8_t _v_nextOperation;
-volatile Register
-  _v_register = {2.5, 13.0, 150.0, 0};
-
-void setup(void) {
-  initI2c();
-  initButtons();
-  //moveQuiclyTo(142.5);
-  //moveSlowly(-20);
-  //moveQuiclyTo(RANGE_IN_MM);
-  //goHome();
+void initButtons(void) {
+  pinMode(AT_HOME_SW, INPUT_PULLUP);
+  pinMode(GO_STEP_BT, INPUT_PULLUP);
+  pinMode(GO_HOME_BT, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(GO_STEP_BT), isrStepButton, FALLING);
+  attachInterrupt(digitalPinToInterrupt(GO_HOME_BT), isrHomeButton, FALLING);
 }
 
-void loop(void) {
-  switch(_v_nextOperation) {
-    case STEP:
-      goStep();
-      break;
-    case HOMING:
-      goHome();
-      break;
-  }
-  _v_nextOperation = NONE;
+bool isAtHome(void) {
+  return !digitalRead(AT_HOME_SW);
 }
 
+void isrStepButton(void) {
+  if (millis() - _v_lastStepIsrTime > (unsigned long)DEBOUNCE_DELAY_MS) _v_nextOperation = STEP;
+  _v_lastStepIsrTime = millis();
+}
+
+void isrHomeButton(void) {
+  if (millis() - _v_lastHomeIsrTime > (unsigned long)DEBOUNCE_DELAY_MS) _v_nextOperation = HOMING;
+  _v_lastHomeIsrTime = millis();
+}
