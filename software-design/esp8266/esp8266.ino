@@ -27,22 +27,18 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
-#ifndef _REGISTER_H
-#define _REGISTER_H
 
-#define REG_MAP_SIZE  16  // Size of the register (consider nuber of bytes)
+#include <Wire.h>
+#include "register.h"
 
-typedef struct {
-  union {
-    byte byteAt[REG_MAP_SIZE];
-    struct {                            // bytes:
-      double kerfMm;                    // 4
-      double fingerMm;                  // 4
-      double toleranceUm;               // 4
-      double offsetMm;                  // 4
-    };
-  };
-} Register;
+// i2c settings
+#define SLAVE_I2C_ADDRESS 0x09
 
-#endif  //_REGISTER_H
+Register _register;
+
+void setup(void) {
+  initI2c();
+}
+
+void loop(void) {
+}

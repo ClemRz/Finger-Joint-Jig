@@ -27,22 +27,14 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
-#ifndef _REGISTER_H
-#define _REGISTER_H
 
-#define REG_MAP_SIZE  16  // Size of the register (consider nuber of bytes)
+void initI2c(void) {
+  Wire.begin();
+}
 
-typedef struct {
-  union {
-    byte byteAt[REG_MAP_SIZE];
-    struct {                            // bytes:
-      double kerfMm;                    // 4
-      double fingerMm;                  // 4
-      double toleranceUm;               // 4
-      double offsetMm;                  // 4
-    };
-  };
-} Register;
+void writeToArduino(void) {
+  Wire.beginTransmission(SLAVE_I2C_ADDRESS);
+  Wire.write(_register.byteAt, REG_MAP_SIZE);
+  Wire.endTransmission();
+}
 
-#endif  //_REGISTER_H
