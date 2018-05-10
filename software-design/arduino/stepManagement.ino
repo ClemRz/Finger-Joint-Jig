@@ -28,27 +28,46 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
- void goStep(void) {
+ void goToNextStep(void) {
   double 
     x = getPositionMm(),
     k = _v_register.kerfMm,
-    offset = _v_register.offsetMm + _v_register.toleranceUm / 2000,
+    offset = _v_register.offsetMm == 0.0 ? 0.0 : _v_register.offsetMm + _v_register.toleranceUm / 2000,
     finger = _v_register.fingerMm,
     space = _v_register.fingerMm + _v_register.toleranceUm / 1000,
     p = finger + space;
-  if (x < offset) {
+  Serial.print("x: "); Serial.println(x);
+  Serial.print("k: "); Serial.println(k);
+  Serial.print("offset: "); Serial.println(offset);
+  Serial.print("finger: "); Serial.println(finger);
+  Serial.print("space: "); Serial.println(space);
+  Serial.print("p: "); Serial.println(p);
+  if (MM_PER_STEP < offset - x) { //We need to cut the offset blank
+    Serial.println("x < offset");
     stepOneKerf(offset - x);
   } else {
-    x -= offset + floor(x / p) * p;
-    if (x < finger + k) {
+    Serial.println("x >= offset");
+    x -= offset;
+    Serial.print("x: "); Serial.println(x);
+    x = fmod(x, p);
+    Serial.print("fmod(x, p): "); Serial.println(fmod(x, p));
+    Serial.print("x: "); Serial.println(x);
+    Serial.print("p - x: "); Serial.println(p - x);
+    if (isnan(x) || isinf(x)) return;
+    if (p - x < MM_PER_STEP) x -= p;
+    Serial.print("x: "); Serial.println(x);
+    Serial.print("finger + k - x: "); Serial.println(finger + k - x);
+    if (MM_PER_STEP < finger + k - x) { //We need to move to the next blank
+      Serial.println("x < finger + k");
       moveSlowly(finger + k - x);
-    } else {
+    } else { //We need to cut the blank
+      Serial.println("x >= finger + k");
       stepOneKerf(p - x);
     }
   }
  }
 
  void stepOneKerf(double remainingMm) {
-    moveSlowly(min(_v_register.kerfMm, remainingMm));
+  moveSlowly(min(_v_register.kerfMm, remainingMm));
  }
 

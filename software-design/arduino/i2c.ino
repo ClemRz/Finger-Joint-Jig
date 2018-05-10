@@ -42,5 +42,9 @@ void isrOnI2cReceive(int numBytes) {
       i++;
     } else Wire.read(); // Ignore the rest of it
   }
+  Serial.print("_v_register.kerfMm: "); Serial.println(_v_register.kerfMm);
+  Serial.print("_v_register.fingerMm: "); Serial.println(_v_register.fingerMm);
+  Serial.print("_v_register.toleranceUm: "); Serial.println(_v_register.toleranceUm);
+  Serial.print("_v_register.offsetMm: "); Serial.println(_v_register.offsetMm);
   showFree();
 }

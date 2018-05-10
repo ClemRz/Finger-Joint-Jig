@@ -34,25 +34,26 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // Stepper settings
 #define RANGE_IN_MM       285     //mm
-#define RANGE_IN_STEPS    6850    //steps
-#define STEPS_PER_MM      24.035  //setps/mm = 42µm/step
-#define FULL_SPEED        1200    //1200
-#define LOW_SPEED         100
-#define FULL_ACC          2000    //2000
-#define LOW_ACC           100
+#define RANGE_IN_STEPS    14757   //steps
+#define STEPS_PER_MM      51.779  //setps/mm
+#define MM_PER_STEP       0.019   //mm/step
+#define FULL_SPEED        1800    //steps/s = 34.763 mm/s
+#define LOW_SPEED         150     //steps/s = 2.897 mm/s
+#define FULL_ACC          4000    //steps/s2 = 77.251 mm/s2
+#define LOW_ACC           200     //steps/s2 = 3.863 mm/s2
 
 // i2c settings
 #define SLAVE_I2C_ADDRESS 0x09
 
 // Pins
-#define AT_HOME_SW        6
-#define GO_STEP_BT        7
-#define GO_HOME_BT        8
+#define GO_STEP_BT        2
+#define GO_HOME_BT        3
+#define AT_HOME_SW        8
 #define RED_LED           9
 #define GREEN_LED         10
 
 // Buttons management
-#define DEBOUNCE_DELAY_MS 10L
+#define DEBOUNCE_DELAY_MS 500L
 
 // Commands
 #define NONE              0
@@ -60,34 +61,37 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define HOMING            2
 
 // Globals
-AccelStepper stepper;
+AccelStepper stepper(AccelStepper::HALF4WIRE, 4, 5, 6, 7);
 
 // Volatiles
 volatile unsigned long
   _v_lastStepIsrTime =    0,
   _v_lastHomeIsrTime =    0;
 volatile uint8_t _v_operation = NONE;
-volatile Register
-  _v_register = {2.5, 13.0, 150.0, 0};
+volatile Register _v_register;
 
 void setup(void) {
+  Serial.begin(115200);
+  Serial.println();
+  defaultRegister();
   initLed();
   showBusy();
   initI2c();
   initButtons();
-  //moveQuiclyTo(142.5);
-  //moveSlowly(-20);
-  //moveQuiclyTo(RANGE_IN_MM);
-  //goHome();
+  Serial.print("_v_register.kerfMm: "); Serial.println(_v_register.kerfMm);
+  Serial.print("_v_register.fingerMm: "); Serial.println(_v_register.fingerMm);
+  Serial.print("_v_register.toleranceUm: "); Serial.println(_v_register.toleranceUm);
+  Serial.print("_v_register.offsetMm: "); Serial.println(_v_register.offsetMm);
   showFree();
 }
 
 void loop(void) {
   if (_v_operation != NONE) {
+    Serial.println(_v_operation == STEP ? "Step" : "Home");
     showBusy();
     switch(_v_operation) {
       case STEP:
-        goStep();
+        goToNextStep();
         break;
       case HOMING:
         goHome();
@@ -96,5 +100,12 @@ void loop(void) {
     showFree();
     _v_operation = NONE;
   }
+}
+
+void defaultRegister(void) {
+  _v_register.kerfMm = 2.5;
+  _v_register.fingerMm = 13.0;
+  _v_register.toleranceUm = 150.0;
+  _v_register.offsetMm = 0.0;
 }
 

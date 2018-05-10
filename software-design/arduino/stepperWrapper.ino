@@ -47,6 +47,7 @@ void moveQuicly(double mm) {
 }
 
 void moveSlowly(double mm) {
+  Serial.print("Move "); Serial.print(mm); Serial.println("mm");
   setSlow();
   move(mm);
 }
@@ -74,6 +75,7 @@ void setFast(void) {
 //Relative position
 void move(double mm) {
   int index = stepper.currentPosition() + round(mm * STEPS_PER_MM);
+  Serial.print("Move "); Serial.print(round(mm * STEPS_PER_MM)); Serial.println(" steps");
   moveToIndex(index);
 }
 
