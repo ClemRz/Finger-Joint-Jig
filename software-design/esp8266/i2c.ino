@@ -32,7 +32,7 @@ void initI2c(void) {
   Wire.begin();
 }
 
-void writeToArduino(void) {
+void writeArduino(void) {
   Wire.beginTransmission(SLAVE_I2C_ADDRESS);
   Wire.write(_register.byteAt, REG_MAP_SIZE);
   Wire.endTransmission();

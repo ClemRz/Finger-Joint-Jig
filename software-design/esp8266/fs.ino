@@ -27,43 +27,41 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-#include <Wire.h>                 // https://github.com/esp8266/Arduino/
-#include <ESP8266WiFi.h>          // https://github.com/esp8266/Arduino/
-#include <WiFiClient.h>           // https://github.com/esp8266/Arduino/
-#include <ESP8266WebServer.h>     // https://github.com/esp8266/Arduino/
-#include "FS.h"                   // https://github.com/esp8266/Arduino/
-#include <ArduinoJson.h>          // https://github.com/bblanchon/ArduinoJson
-#include "register.h"             // https://github.com/ClemRz/Introduction-to-IoT#use-structures
-
-// pins
-#define SCL                   12
-#define SDA                   13
-
-// FS
-#define CONFIG_FILE_PATH      "/cfg.json"
-
-// i2c settings
-#define SLAVE_I2C_ADDRESS 0x09
-
-const char *_SSID = "espFingerJointJig";
-
-Register _register;
-ESP8266WebServer _server(80);
-
-void setup(void) {
-  initFS();
-  initI2c();
-  startAP();
+ 
+void initFS(void) {
+  SPIFFS.begin();
+  readConfig();
 }
 
-void loop(void) {
-  _server.handleClient();
+void writeConfig(void) {
+  File file = SPIFFS.open(CONFIG_FILE_PATH, "w");
+  if (file) {
+    DynamicJsonBuffer jsonBuffer(JSON_OBJECT_SIZE(4));
+    JsonObject& root = jsonBuffer.createObject();
+    root["k"] = _register.kerfMm;
+    root["f"] = _register.fingerMm;
+    root["t"] = _register.toleranceUm;
+    root["o"] = _register.offsetMm;
+    root.printTo(file);
+    file.close();
+  }
 }
 
-void defaultRegister(void) {
-  _register.kerfMm = 2.5;
-  _register.fingerMm = 13.0;
-  _register.toleranceUm = 150.0;
-  _register.offsetMm = 0.0;
+void readConfig(void) {
+  File file = SPIFFS.open(CONFIG_FILE_PATH, "r");
+  if (file) {
+    if(file.available()) {
+      const char* json = file.readStringUntil('\n').c_str();
+      DynamicJsonBuffer jsonBuffer(JSON_OBJECT_SIZE(4));
+      JsonObject& root = jsonBuffer.parseObject(json);
+      _register.kerfMm = root["k"];
+      _register.fingerMm = root["f"];
+      _register.toleranceUm = root["t"];
+      _register.offsetMm = root["o"];
+    }
+    file.close();
+  } else {
+    defaultRegister();
+  }
 }
+
