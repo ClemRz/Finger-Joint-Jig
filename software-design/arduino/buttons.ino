@@ -34,7 +34,6 @@ void initButtons(void) {
   pinMode(GO_HOME_BT, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(GO_STEP_BT), isrStepButton, FALLING);
   attachInterrupt(digitalPinToInterrupt(GO_HOME_BT), isrHomeButton, FALLING);
-  Serial.println("ok");
 }
 
 bool isAtHome(void) {

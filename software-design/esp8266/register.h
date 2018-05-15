@@ -37,10 +37,10 @@ typedef struct {
   union {
     byte byteAt[REG_MAP_SIZE];
     struct {                            // bytes:
-      double kerfMm;                    // 4
-      double fingerMm;                  // 4
-      double toleranceUm;               // 4
-      double offsetMm;                  // 4
+      float kerfMm;                     // 4
+      float fingerMm;                   // 4
+      float toleranceUm;                // 4
+      float offsetMm;                   // 4
     };
   };
 } Register;

@@ -28,8 +28,8 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-double getPositionMm(void) {
-  return (double)stepper.currentPosition() / STEPS_PER_MM;
+float getPositionMm(void) {
+  return (float)stepper.currentPosition() / STEPS_PER_MM;
 }
 
 void goHome(void) {
@@ -41,23 +41,23 @@ void goHome(void) {
   stepper.setCurrentPosition(0);
 }
 
-void moveQuicly(double mm) {
+void moveQuicly(float mm) {
   setFast();
   move(mm);
 }
 
-void moveSlowly(double mm) {
-  Serial.print("Move "); Serial.print(mm); Serial.println("mm");
+void moveSlowly(float mm) {
+  Serial.print(F("Move ")); Serial.print(mm); Serial.println(F("mm"));
   setSlow();
   move(mm);
 }
 
-void moveQuiclyTo(double mm) {
+void moveQuiclyTo(float mm) {
   setFast();
   moveTo(mm);
 }
 
-void moveSlowlyTo(double mm) {
+void moveSlowlyTo(float mm) {
   setSlow();
   moveTo(mm);
 }
@@ -73,14 +73,14 @@ void setFast(void) {
 }
 
 //Relative position
-void move(double mm) {
+void move(float mm) {
   int index = stepper.currentPosition() + round(mm * STEPS_PER_MM);
-  Serial.print("Move "); Serial.print(round(mm * STEPS_PER_MM)); Serial.println(" steps");
+  Serial.print(F("Move ")); Serial.print(round(mm * STEPS_PER_MM)); Serial.println(F(" steps"));
   moveToIndex(index);
 }
 
 //Absolute position
-void moveTo(double mm) {
+void moveTo(float mm) {
   int index = round(mm * STEPS_PER_MM);
   moveToIndex(index);
 }

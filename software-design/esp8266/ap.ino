@@ -34,10 +34,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }
 
 void initWifiAP(void) {
-    WiFi.softAP(_SSID);
+  WiFi.disconnect(true);
+  WiFi.persistent(false);
+  WiFi.softAP(_SSID);
 }
 void initServer(void) {
-    _server.on("/", HTTP_GET, handleGetRoot);
-    _server.on("/", HTTP_POST, handlePostRoot);
-    _server.begin();
+  _server.on("/", HTTP_GET, handleGetRoot);
+  _server.on("/", HTTP_POST, handlePostRoot);
+  _server.begin();
 }

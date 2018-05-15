@@ -36,7 +36,7 @@ void initFS(void) {
 void writeConfig(void) {
   File file = SPIFFS.open(CONFIG_FILE_PATH, "w");
   if (file) {
-    DynamicJsonBuffer jsonBuffer(JSON_OBJECT_SIZE(4));
+    DynamicJsonBuffer jsonBuffer(JSON_OBJECT_SIZE(156));
     JsonObject& root = jsonBuffer.createObject();
     root["k"] = _register.kerfMm;
     root["f"] = _register.fingerMm;
@@ -51,9 +51,8 @@ void readConfig(void) {
   File file = SPIFFS.open(CONFIG_FILE_PATH, "r");
   if (file) {
     if(file.available()) {
-      const char* json = file.readStringUntil('\n').c_str();
-      DynamicJsonBuffer jsonBuffer(JSON_OBJECT_SIZE(4));
-      JsonObject& root = jsonBuffer.parseObject(json);
+      DynamicJsonBuffer jsonBuffer(JSON_OBJECT_SIZE(156));
+      JsonObject& root = jsonBuffer.parseObject(file.readString());
       _register.kerfMm = root["k"];
       _register.fingerMm = root["f"];
       _register.toleranceUm = root["t"];

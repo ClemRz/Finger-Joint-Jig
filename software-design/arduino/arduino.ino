@@ -78,11 +78,8 @@ void setup(void) {
   showBusy();
   initI2c();
   initButtons();
-  Serial.print("_v_register.kerfMm: "); Serial.println(_v_register.kerfMm);
-  Serial.print("_v_register.fingerMm: "); Serial.println(_v_register.fingerMm);
-  Serial.print("_v_register.toleranceUm: "); Serial.println(_v_register.toleranceUm);
-  Serial.print("_v_register.offsetMm: "); Serial.println(_v_register.offsetMm);
-  showFree();
+  printRegister();
+  showReady();
 }
 
 void loop(void) {
@@ -97,7 +94,7 @@ void loop(void) {
         goHome();
         break;
     }
-    showFree();
+    showReady();
     _v_operation = NONE;
   }
 }

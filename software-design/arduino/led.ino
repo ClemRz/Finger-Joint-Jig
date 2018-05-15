@@ -34,11 +34,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  }
 
  void showBusy(void) {
+  Serial.println(F("Busy"));
   digitalWrite(GREEN_LED, LOW);
   digitalWrite(RED_LED, HIGH);
  }
 
- void showFree(void) {
+ void showReady(void) {
+  Serial.println(F("Ready\n"));
   digitalWrite(GREEN_LED, HIGH);
   digitalWrite(RED_LED, LOW);
  }

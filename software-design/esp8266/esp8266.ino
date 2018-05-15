@@ -37,16 +37,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "register.h"             // https://github.com/ClemRz/Introduction-to-IoT#use-structures
 
 // pins
-#define SCL                   12
-#define SDA                   13
+#define SDA                       13
+#define SCL                       12
 
 // FS
-#define CONFIG_FILE_PATH      "/cfg.json"
+#define CONFIG_FILE_PATH          "/cfg.json"
 
 // i2c settings
-#define SLAVE_I2C_ADDRESS 0x09
+#define SLAVE_I2C_ADDRESS         0x09
 
-const char *_SSID = "espFingerJointJig";
+const char *_SSID =               "espFingerJointJig";
 
 Register _register;
 ESP8266WebServer _server(80);

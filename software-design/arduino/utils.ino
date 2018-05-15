@@ -28,13 +28,9 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-void initI2c(void) {
-  Wire.begin(SDA, SCL);
+void printRegister(void) {
+  Serial.print(F("_v_register.kerfMm: ")); Serial.println(_v_register.kerfMm);
+  Serial.print(F("_v_register.fingerMm: ")); Serial.println(_v_register.fingerMm);
+  Serial.print(F("_v_register.toleranceUm: ")); Serial.println(_v_register.toleranceUm);
+  Serial.print(F("_v_register.offsetMm: ")); Serial.println(_v_register.offsetMm);
 }
-
-void writeArduino(void) {
-  Wire.beginTransmission(SLAVE_I2C_ADDRESS);
-  Wire.write(_register.byteAt, REG_MAP_SIZE);
-  Wire.endTransmission();
-}
-

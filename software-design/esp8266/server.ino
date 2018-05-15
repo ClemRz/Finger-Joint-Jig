@@ -39,6 +39,7 @@ void handlePostRoot(void) {
   _register.offsetMm = _server.arg("offsetMm").toFloat();
   writeConfig();
   writeArduino();
+  sendWebPage();
 }
 
 void sendWebPage(void) {
@@ -51,7 +52,7 @@ void sendWebPage(void) {
   out.concat(_register.kerfMm);
   out.concat(F("\"> mm<br><label for=t>Tolerance:</label><input type=number name=toleranceUm id=t min=0 max=999 step=1 value=\""));
   out.concat(_register.toleranceUm);
-  out.concat(F("\"> µm<br><input type=submit value=Submit></fieldset></form></section><section class=help> Hardware characteristics: <ul><li>Range: 285mm / 14757 steps</li><li>1 mm = 51.779 steps</li><li>1 step = 19µm</li></ul></section><footer> &copy; 2018 Clément Ronzon </footer></body></html>"));
+  out.concat(F("\"> &micro;m<br><input type=submit value=Submit></fieldset></form></section><section class=help> Hardware characteristics: <ul><li>Range: 285mm / 14757 steps</li><li>1 mm = 51.779 steps</li><li>1 step = 19&micro;m</li></ul></section><footer> &copy; 2018 Cl&eacute;ment Ronzon </footer></body></html>"));
   _server.send(200, F("text/html"), out);
 }
 
