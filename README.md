@@ -22,8 +22,14 @@ There are 3 buttons:
   - Previous: move the jig back to the last known position
 
 ## Software design
+
+There are 2 main elements in this design:
+
+  - A quadruple H-bridge (L293D) in charge of driving the stepper.
+  - An Arduino Pro Mini (5V, 16MHz) in charge of the movement logic. It is connected by I2C as a slave to the ESP.
+  - An ESP8266 in charge of serving the virtual UI and keeping the settings in EEPROM. This is the master in the I2C network.
  
-The ESP's firmware is quite self explanatory. You will be able to get the `ino` files at the root of this repo.
+The ESP and Arduino firmwares are quite self explanatory. You will be able to get the `ino` files at the root of this repo.
 
 The HTML UI is embedded inside the ESP's firmware but you can modify it following those simple steps:
 
