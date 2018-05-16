@@ -29,6 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
  void goToNextStep(void) {
+  saveCurrentPosition();
   float 
     x = getPositionMm(),
     k = _v_register.kerfMm,
@@ -65,11 +66,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       stepOneKerf(p - x);
     }
   }
-  saveCurrentPosition();
  }
 
  void goToPreviousStep(void) {
-  moveSlowlyToIndex(_indexes.pop());
+  if (_indexes.size() > 0) moveSlowlyToIndex(_indexes.pop());
  }
 
 void saveCurrentPosition(void) {

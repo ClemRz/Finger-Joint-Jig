@@ -46,7 +46,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // i2c settings
 #define SLAVE_I2C_ADDRESS   0x09
 
-const char *_SSID =         "espFingerJointJig";
+const char *_SSID =         "WiFingerJointJig";
 
 Register _register;
 ESP8266WebServer _server(80);
