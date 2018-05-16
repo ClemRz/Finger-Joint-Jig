@@ -28,47 +28,53 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <Wire.h>
-#include <AccelStepper.h>
-#include "register.h"
+#include <Wire.h>                   // https://github.com/esp8266/Arduino/
+#include <AccelStepper.h>           // http://www.airspayce.com/mikem/arduino/AccelStepper/index.html
+#include <LinkedList.h>             // https://github.com/ivanseidel/LinkedList
+#include "register.h"               // https://github.com/ClemRz/Introduction-to-IoT#use-structures
 
 // Stepper settings
-#define RANGE_IN_MM       285     //mm
-#define RANGE_IN_STEPS    14757   //steps
-#define STEPS_PER_MM      51.779  //setps/mm
-#define MM_PER_STEP       0.019   //mm/step
-#define FULL_SPEED        1800    //steps/s = 34.763 mm/s
-#define LOW_SPEED         150     //steps/s = 2.897 mm/s
-#define FULL_ACC          4000    //steps/s2 = 77.251 mm/s2
-#define LOW_ACC           200     //steps/s2 = 3.863 mm/s2
+#define RANGE_IN_MM         285     // mm
+#define RANGE_IN_STEPS      14757   // steps
+#define STEPS_PER_MM        51.779  // setps/mm
+#define MM_PER_STEP         0.019   // mm/step
+#define FULL_SPEED          1800    // steps/s = 34.763 mm/s
+#define LOW_SPEED           150     // steps/s = 2.897 mm/s
+#define FULL_ACC            4000    // steps/s2 = 77.251 mm/s2
+#define LOW_ACC             200     // steps/s2 = 3.863 mm/s2
 
 // i2c settings
-#define SLAVE_I2C_ADDRESS 0x09
+#define SLAVE_I2C_ADDRESS   0x09
 
 // Pins
-#define GO_STEP_BT        2
-#define GO_HOME_BT        3
-#define AT_HOME_SW        8
-#define RED_LED           9
-#define GREEN_LED         10
+#define GO_NEXT_STEP_BT     2
+#define GO_HOME_BT          3
+#define GO_PREV_STEP_BT     4
+#define AT_HOME_SW          5
+#define RED_LED             6
+#define GREEN_LED           7
 
 // Buttons management
-#define DEBOUNCE_DELAY_MS 500L
+#define DEBOUNCE_DELAY_MS   500L
 
 // Commands
-#define NONE              0
-#define STEP              1
-#define HOMING            2
+#define NONE                0
+#define NEXT_STEP           1
+#define PREVIOUS_STEP       2
+#define HOMING              3
 
 // Globals
-AccelStepper stepper(AccelStepper::HALF4WIRE, 4, 5, 6, 7);
+AccelStepper stepper(AccelStepper::HALF4WIRE, 8, 9, 10, 11);
 
 // Volatiles
 volatile unsigned long
-  _v_lastStepIsrTime =    0,
-  _v_lastHomeIsrTime =    0;
+  _v_lastNextStepIsrTime =      0,
+  _v_lastPreviousStepIsrTime =  0,
+  _v_lastHomeIsrTime =          0;
 volatile uint8_t _v_operation = NONE;
 volatile Register _v_register;
+
+LinkedList<long> _indexes = LinkedList<long>();
 
 void setup(void) {
   Serial.begin(115200);
@@ -84,13 +90,18 @@ void setup(void) {
 
 void loop(void) {
   if (_v_operation != NONE) {
-    Serial.println(_v_operation == STEP ? "Step" : "Home");
     showBusy();
     switch(_v_operation) {
-      case STEP:
+      case NEXT_STEP:
+        Serial.println(F("Next Step"));
         goToNextStep();
         break;
+      case PREVIOUS_STEP:
+        Serial.println(F("Previous Step"));
+        goToPreviousStep();
+        break;
       case HOMING:
+        Serial.println(F("Home"));
         goHome();
         break;
     }

@@ -30,9 +30,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 void initButtons(void) {
   pinMode(AT_HOME_SW, INPUT_PULLUP);
-  pinMode(GO_STEP_BT, INPUT_PULLUP);
+  pinMode(GO_NEXT_STEP_BT, INPUT_PULLUP);
+  pinMode(GO_PREV_STEP_BT, INPUT_PULLUP);
   pinMode(GO_HOME_BT, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(GO_STEP_BT), isrStepButton, FALLING);
+  attachInterrupt(digitalPinToInterrupt(GO_NEXT_STEP_BT), isrNextStepButton, FALLING);
+  attachInterrupt(digitalPinToInterrupt(GO_PREV_STEP_BT), isrPreviousStepButton, FALLING);
   attachInterrupt(digitalPinToInterrupt(GO_HOME_BT), isrHomeButton, FALLING);
 }
 
@@ -40,9 +42,14 @@ bool isAtHome(void) {
   return !digitalRead(AT_HOME_SW);
 }
 
-void isrStepButton(void) {
-  if (millis() - _v_lastStepIsrTime > (unsigned long)DEBOUNCE_DELAY_MS) _v_operation = STEP;
-  _v_lastStepIsrTime = millis();
+void isrNextStepButton(void) {
+  if (millis() - _v_lastNextStepIsrTime > (unsigned long)DEBOUNCE_DELAY_MS) _v_operation = NEXT_STEP;
+  _v_lastNextStepIsrTime = millis();
+}
+
+void isrPreviousStepButton(void) {
+  if (millis() - _v_lastPreviousStepIsrTime > (unsigned long)DEBOUNCE_DELAY_MS) _v_operation = PREVIOUS_STEP;
+  _v_lastPreviousStepIsrTime = millis();
 }
 
 void isrHomeButton(void) {

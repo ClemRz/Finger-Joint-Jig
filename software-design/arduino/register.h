@@ -33,6 +33,21 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #define REG_MAP_SIZE  16  // Size of the register (consider nuber of bytes)
 
+/**
+ * ===================== /!\ =====================
+ * 
+ * we need to use float and not double in order to keep
+ * compatibility between Arduino and ESP8266:
+ * 
+ *  bytes   float     double
+ * Arduino    4         4
+ * ESP8266    4         8
+ * 
+ * https://github.com/esp8266/Arduino/blob/master/tools/sdk/include/c_types.h
+ * 
+ * ===============================================
+ */
+
 typedef struct {
   union {
     byte byteAt[REG_MAP_SIZE];

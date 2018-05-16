@@ -65,7 +65,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       stepOneKerf(p - x);
     }
   }
+  saveCurrentPosition();
  }
+
+ void goToPreviousStep(void) {
+  moveSlowlyToIndex(_indexes.pop());
+ }
+
+void saveCurrentPosition(void) {
+  _indexes.add(getPositionIndex());
+}
 
  void stepOneKerf(float remainingMm) {
   moveSlowly(min(_v_register.kerfMm, remainingMm));

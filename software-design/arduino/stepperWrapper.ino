@@ -29,7 +29,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 float getPositionMm(void) {
-  return (float)stepper.currentPosition() / STEPS_PER_MM;
+  return (float)getPositionIndex() / STEPS_PER_MM;
+}
+
+long getPositionIndex(void) {
+  return stepper.currentPosition();
 }
 
 void goHome(void) {
@@ -62,6 +66,11 @@ void moveSlowlyTo(float mm) {
   moveTo(mm);
 }
 
+void moveSlowlyToIndex(long index) {
+  setSlow();
+  moveToIndex(index);
+}
+
 void setSlow(void) {
   stepper.setMaxSpeed(LOW_SPEED);
   stepper.setAcceleration(LOW_ACC);
@@ -81,11 +90,11 @@ void move(float mm) {
 
 //Absolute position
 void moveTo(float mm) {
-  int index = round(mm * STEPS_PER_MM);
+  long index = round(mm * STEPS_PER_MM);
   moveToIndex(index);
 }
 
-void moveToIndex(int index) {
+void moveToIndex(long index) {
   if (index >= 0 && index <= RANGE_IN_STEPS) {
     stepper.runToNewPosition(index);
   }

@@ -29,7 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 void initI2c(void) {
-  Wire.begin(SDA, SCL);
+  Wire.begin();
 }
 
 void writeArduino(void) {
