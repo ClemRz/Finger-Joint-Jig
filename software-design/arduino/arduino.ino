@@ -47,12 +47,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define SLAVE_I2C_ADDRESS   0x09
 
 // Pins
-#define GO_NEXT_STEP_BT     2
-#define GO_HOME_BT          3
-#define GO_PREV_STEP_BT     4
-#define AT_HOME_SW          5
-#define RED_LED             6
-#define GREEN_LED           7
+#define GREEN_LED           2
+#define RED_LED             3
+#define AT_HOME_SW          4
+#define GO_PREV_STEP_BT     5
+#define GO_HOME_BT          6
+#define GO_NEXT_STEP_BT     7
 
 // Buttons management
 #define DEBOUNCE_DELAY_MS   500L
