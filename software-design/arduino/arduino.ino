@@ -65,13 +65,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // Globals
 AccelStepper stepper(AccelStepper::HALF4WIRE, 8, 9, 10, 11);
+uint8_t _operation =        NONE;
+unsigned long
+  _lastButtonTime =         0;
 
 // Volatiles
-volatile unsigned long
-  _v_lastNextStepIsrTime =      0,
-  _v_lastPreviousStepIsrTime =  0,
-  _v_lastHomeIsrTime =          0;
-volatile uint8_t _v_operation = NONE;
 volatile Register _v_register;
 
 LinkedList<long> _indexes = LinkedList<long>();
@@ -89,9 +87,10 @@ void setup(void) {
 }
 
 void loop(void) {
-  if (_v_operation != NONE) {
+  listenButtons();
+  if (_operation != NONE) {
     showBusy();
-    switch(_v_operation) {
+    switch(_operation) {
       case NEXT_STEP:
         Serial.println(F("Next Step"));
         goToNextStep();
@@ -106,7 +105,7 @@ void loop(void) {
         break;
     }
     showReady();
-    _v_operation = NONE;
+    _operation = NONE;
   }
 }
 

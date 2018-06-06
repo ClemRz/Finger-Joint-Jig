@@ -37,6 +37,7 @@ long getPositionIndex(void) {
 }
 
 void goHome(void) {
+  _indexes.clear();
   setFast();
   stepper.move(-2 * RANGE_IN_STEPS);
   while (!isAtHome()) stepper.run();
@@ -96,6 +97,9 @@ void moveTo(float mm) {
 
 void moveToIndex(long index) {
   if (index >= 0 && index <= RANGE_IN_STEPS) {
+    Serial.print(F("runToNewPosition: ")); Serial.println(index);
     stepper.runToNewPosition(index);
+  } else {
+    Serial.print(F("Won't runToNewPosition: ")); Serial.print(index); Serial.println(F(", out of bounds"));
   }
 }

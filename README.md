@@ -23,7 +23,7 @@ There are 3 buttons:
 
 ## Software design
 
-There are 2 main elements in this design:
+There are 3 main elements in this design:
 
   - A quadruple H-bridge (L293D) in charge of driving the stepper.
   - An Arduino Pro Mini (5V, 16MHz) in charge of the movement logic. It is connected by I2C as a slave to the ESP.

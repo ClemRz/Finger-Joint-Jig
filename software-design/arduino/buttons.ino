@@ -33,26 +33,19 @@ void initButtons(void) {
   pinMode(GO_NEXT_STEP_BT, INPUT_PULLUP);
   pinMode(GO_PREV_STEP_BT, INPUT_PULLUP);
   pinMode(GO_HOME_BT, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(GO_NEXT_STEP_BT), isrNextStepButton, FALLING);
-  attachInterrupt(digitalPinToInterrupt(GO_PREV_STEP_BT), isrPreviousStepButton, FALLING);
-  attachInterrupt(digitalPinToInterrupt(GO_HOME_BT), isrHomeButton, FALLING);
 }
 
 bool isAtHome(void) {
   return !digitalRead(AT_HOME_SW);
 }
 
-void isrNextStepButton(void) {
-  if (millis() - _v_lastNextStepIsrTime > (unsigned long)DEBOUNCE_DELAY_MS) _v_operation = NEXT_STEP;
-  _v_lastNextStepIsrTime = millis();
-}
-
-void isrPreviousStepButton(void) {
-  if (millis() - _v_lastPreviousStepIsrTime > (unsigned long)DEBOUNCE_DELAY_MS) _v_operation = PREVIOUS_STEP;
-  _v_lastPreviousStepIsrTime = millis();
-}
-
-void isrHomeButton(void) {
-  if (millis() - _v_lastHomeIsrTime > (unsigned long)DEBOUNCE_DELAY_MS) _v_operation = HOMING;
-  _v_lastHomeIsrTime = millis();
+void listenButtons(void) {
+  bool
+    next = digitalRead(GO_NEXT_STEP_BT),
+    prev = digitalRead(GO_PREV_STEP_BT),
+    home = digitalRead(GO_HOME_BT);
+  if (!(next && prev && home)) {
+    if (millis() - _lastButtonTime > (unsigned long)DEBOUNCE_DELAY_MS) _operation = next ? (prev ? (home ? NONE : HOMING) : PREVIOUS_STEP) : NEXT_STEP;
+    _lastButtonTime = millis();
+  }
 }

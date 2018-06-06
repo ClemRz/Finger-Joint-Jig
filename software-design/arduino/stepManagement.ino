@@ -69,7 +69,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  }
 
  void goToPreviousStep(void) {
-  if (_indexes.size() > 0) moveSlowlyToIndex(_indexes.pop());
+  if (_indexes.size() > 0) {
+    long index = _indexes.pop();
+    Serial.println(index);
+    Serial.print(F("Move ")); Serial.print(getPositionIndex() - index); Serial.println(F(" steps backward"));
+    moveSlowlyToIndex(index);
+  }
  }
 
 void saveCurrentPosition(void) {
