@@ -28,9 +28,16 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+void printDefinition(void) {
+  Serial.println(F("Definition:"));
+  Serial.print(F("  ")); Serial.print(1000*STEPS_PER_MM); Serial.println(F(" steps/m"));
+  Serial.print(F("  ")); Serial.print(1000*MM_PER_STEP); Serial.println(F(" um/step\n"));
+}
+
 void printRegister(void) {
-  Serial.print(F("_v_register.kerfMm: ")); Serial.println(_v_register.kerfMm);
-  Serial.print(F("_v_register.fingerMm: ")); Serial.println(_v_register.fingerMm);
-  Serial.print(F("_v_register.toleranceUm: ")); Serial.println(_v_register.toleranceUm);
-  Serial.print(F("_v_register.offsetMm: ")); Serial.println(_v_register.offsetMm);
+  Serial.println(F("Configuration:"));
+  Serial.print(F("  _v_register.kerfMm: ")); Serial.print(_v_register.kerfMm); Serial.println(F("mm"));
+  Serial.print(F("  _v_register.fingerMm: ")); Serial.print(_v_register.fingerMm); Serial.println(F("mm"));
+  Serial.print(F("  _v_register.toleranceUm: ")); Serial.print(_v_register.toleranceUm); Serial.println(F("um"));
+  Serial.print(F("  _v_register.offsetMm: ")); Serial.print(_v_register.offsetMm); Serial.println(F("mm"));
 }

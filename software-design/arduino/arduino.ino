@@ -34,14 +34,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "register.h"               // https://github.com/ClemRz/Introduction-to-IoT#use-structures
 
 // Stepper settings
-#define RANGE_IN_MM         285     // mm
-#define RANGE_IN_STEPS      14757   // steps
-#define STEPS_PER_MM        51.779  // setps/mm
-#define MM_PER_STEP         0.019   // mm/step
-#define FULL_SPEED          1800    // steps/s = 34.763 mm/s
-#define LOW_SPEED           150     // steps/s = 2.897 mm/s
-#define FULL_ACC            4000    // steps/s2 = 77.251 mm/s2
-#define LOW_ACC             200     // steps/s2 = 3.863 mm/s2
+#define RANGE_IN_MM         285.0                         // mm
+#define RANGE_IN_STEPS      14757.0                       // steps
+#define STEPS_PER_MM        (RANGE_IN_STEPS/RANGE_IN_MM)  // setps/mm (51.779 steps/mm)
+#define MM_PER_STEP         (RANGE_IN_MM/RANGE_IN_STEPS)  // mm/step (0.019 mm/step)
+#define FULL_SPEED          1800                          // steps/s (34.763 mm/s)
+#define LOW_SPEED           150                           // steps/s (2.897 mm/s)
+#define FULL_ACC            4000                          // steps/s2 (77.251 mm/s2)
+#define LOW_ACC             200                           // steps/s2 (3.863 mm/s2)
 
 // i2c settings
 #define SLAVE_I2C_ADDRESS   0x09
@@ -82,6 +82,7 @@ void setup(void) {
   showBusy();
   initI2c();
   initButtons();
+  printDefinition();
   printRegister();
   showReady();
 }

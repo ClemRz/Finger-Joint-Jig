@@ -35,15 +35,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     k = _v_register.kerfMm,
     offset = _v_register.offsetMm == 0.0 ? 0.0 : _v_register.offsetMm + _v_register.toleranceUm / 2000,
     finger = _v_register.fingerMm,
-    space = _v_register.fingerMm + _v_register.toleranceUm / 1000,
-    p = finger + space;
+    coutOut = finger + _v_register.toleranceUm / 1000,
+    p = finger + coutOut;
   Serial.print(F("x: ")); Serial.println(x);
   Serial.print(F("k: ")); Serial.println(k);
   Serial.print(F("offset: ")); Serial.println(offset);
   Serial.print(F("finger: ")); Serial.println(finger);
-  Serial.print(F("space: ")); Serial.println(space);
+  Serial.print(F("coutOut: ")); Serial.println(coutOut);
   Serial.print(F("p: ")); Serial.println(p);
-  if (MM_PER_STEP < offset - x) { //We need to cut the offset blank
+  if (offset - x > MM_PER_STEP) { //We need to cut out the offset
     Serial.println(F("x < offset"));
     stepOneKerf(offset - x);
   } else {
@@ -58,10 +58,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     if (p - x < MM_PER_STEP) x -= p;
     Serial.print(F("x: ")); Serial.println(x);
     Serial.print(F("finger + k - x: ")); Serial.println(finger + k - x);
-    if (MM_PER_STEP < finger + k - x) { //We need to move to the next blank
+    if (finger + k - x > MM_PER_STEP) { //We need to move to the next cut out
       Serial.println(F("x < finger + k"));
       moveSlowly(finger + k - x);
-    } else { //We need to cut the blank
+    } else { //Cut out, kerf by kerf
       Serial.println(F("x >= finger + k"));
       stepOneKerf(p - x);
     }
