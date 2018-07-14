@@ -34,7 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "register.h"               // https://github.com/ClemRz/Introduction-to-IoT#use-structures
 
 // Stepper settings
-#define RANGE_IN_MM         285.0                         // mm
+#define RANGE_IN_MM         307.0                         // mm
 #define RANGE_IN_STEPS      14757.0                       // steps
 #define STEPS_PER_MM        (RANGE_IN_STEPS/RANGE_IN_MM)  // setps/mm (51.779 steps/mm)
 #define MM_PER_STEP         (RANGE_IN_MM/RANGE_IN_STEPS)  // mm/step (0.019 mm/step)
