@@ -29,23 +29,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 void initButtons(void) {
-  pinMode(AT_HOME_SW, INPUT_PULLUP);
   pinMode(GO_NEXT_STEP_BT, INPUT_PULLUP);
   pinMode(GO_PREV_STEP_BT, INPUT_PULLUP);
-  pinMode(GO_HOME_BT, INPUT_PULLUP);
-}
-
-bool isAtHome(void) {
-  return !digitalRead(AT_HOME_SW);
+  pinMode(TOGGLE_MOTOR_BT, INPUT_PULLUP);
 }
 
 void listenButtons(void) {
   bool
     next = digitalRead(GO_NEXT_STEP_BT),
     prev = digitalRead(GO_PREV_STEP_BT),
-    home = digitalRead(GO_HOME_BT);
-  if (!(next && prev && home)) {
-    if (millis() - _lastButtonTime > (unsigned long)DEBOUNCE_DELAY_MS) _operation = next ? (prev ? (home ? NONE : HOMING) : PREVIOUS_STEP) : NEXT_STEP;
+    toggle = digitalRead(TOGGLE_MOTOR_BT);
+  if (!(next && prev) && _motorIsEnabled) {
+    if (millis() - _lastButtonTime > (unsigned long)DEBOUNCE_DELAY_MS) _operation = next ? (prev ? NONE : PREVIOUS_STEP) : NEXT_STEP;
+    _lastButtonTime = millis();
+  }
+  if (!toggle) {
+    if (millis() - _lastButtonTime > (unsigned long)DEBOUNCE_DELAY_MS) _operation = TOGGLING;
     _lastButtonTime = millis();
   }
 }

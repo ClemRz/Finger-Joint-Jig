@@ -49,9 +49,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Pins
 #define GREEN_LED           2
 #define RED_LED             3
-#define AT_HOME_SW          4
+#define ENABLE_MOTOR        4
 #define GO_PREV_STEP_BT     5
-#define GO_HOME_BT          6
+#define TOGGLE_MOTOR_BT     6
 #define GO_NEXT_STEP_BT     7
 
 // Buttons management
@@ -61,13 +61,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define NONE                0
 #define NEXT_STEP           1
 #define PREVIOUS_STEP       2
-#define HOMING              3
+#define TOGGLING            3
 
 // Globals
-AccelStepper stepper(AccelStepper::HALF4WIRE, 8, 9, 10, 11);
+AccelStepper stepper(AccelStepper::HALF4WIRE, 8, 9, 10, 11, ENABLE_MOTOR);
 uint8_t _operation =        NONE;
 unsigned long
   _lastButtonTime =         0;
+bool _motorIsEnabled =      true;
 
 // Volatiles
 volatile Register _v_register;
@@ -100,9 +101,9 @@ void loop(void) {
         Serial.println(F("Previous Step"));
         goToPreviousStep();
         break;
-      case HOMING:
-        Serial.println(F("Home"));
-        goHome();
+      case TOGGLING:
+        Serial.println(F("Toggle motor"));
+        toggleMotor();
         break;
     }
     showReady();
@@ -111,8 +112,8 @@ void loop(void) {
 }
 
 void defaultRegister(void) {
-  _v_register.kerfMm = 2.5;
-  _v_register.fingerMm = 13.0;
+  _v_register.kerfMm = 2.39;
+  _v_register.fingerMm = 6.0;
   _v_register.toleranceUm = 150.0;
   _v_register.offsetMm = 0.0;
 }

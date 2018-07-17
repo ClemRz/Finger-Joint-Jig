@@ -34,14 +34,32 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  }
 
  void showBusy(void) {
+  showBusy(false);
+ }
+
+ void showReady(void) {
+  showReady(false);
+ }
+
+ void showBusy(bool force) {
+  if (!_motorIsEnabled && !force) return;
   Serial.println(F("--Busy--"));
   digitalWrite(GREEN_LED, LOW);
   digitalWrite(RED_LED, HIGH);
  }
 
- void showReady(void) {
+ void showReady(bool force) {
+  if (!_motorIsEnabled && !force) return;
   Serial.println(F("--Ready--\n"));
   digitalWrite(GREEN_LED, HIGH);
   digitalWrite(RED_LED, LOW);
+ }
+
+ void toggleDisplay(bool start) {
+  if (_motorIsEnabled ^ start) {
+    showReady(true);
+  } else {
+    showBusy(true);
+  }
  }
 

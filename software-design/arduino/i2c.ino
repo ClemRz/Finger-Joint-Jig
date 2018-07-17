@@ -34,7 +34,7 @@ void initI2c(void) {
 }
 
 void isrOnI2cReceive(int numBytes) {
-  showBusy();
+  toggleDisplay(true);
   uint8_t i = 0;
   while (Wire.available()) {
     if (i < REG_MAP_SIZE) { // Read enough bytes to fill the register
@@ -43,5 +43,5 @@ void isrOnI2cReceive(int numBytes) {
     } else Wire.read(); // Ignore the rest of it
   }
   printRegister();
-  showReady();
+  toggleDisplay(false);
 }

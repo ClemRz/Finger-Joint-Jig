@@ -63,8 +63,8 @@ void loop(void) {
 }
 
 void defaultRegister(void) {
-  _register.kerfMm = 2.5;
-  _register.fingerMm = 13.0;
+  _register.kerfMm = 2.39;
+  _register.fingerMm = 6.0;
   _register.toleranceUm = 150.0;
   _register.offsetMm = 0.0;
 }

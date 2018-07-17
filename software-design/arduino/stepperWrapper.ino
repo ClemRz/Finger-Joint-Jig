@@ -36,14 +36,19 @@ long getPositionIndex(void) {
   return stepper.currentPosition();
 }
 
-void goHome(void) {
-  _indexes.clear();
-  setFast();
-  stepper.move(-2 * RANGE_IN_STEPS);
-  while (!isAtHome()) stepper.run();
-  stepper.setMaxSpeed(LOW_SPEED);
-  stepper.stop();
-  stepper.setCurrentPosition(0);
+void toggleMotor(void) {
+  _motorIsEnabled = !_motorIsEnabled;
+  if (_motorIsEnabled) {
+    stepper.enableOutputs();
+    stepper.move(1);
+    stepper.runToPosition();
+    stepper.move(-1);
+    stepper.runToPosition();
+    Serial.print(F("Motor enabled\n"));
+  } else {
+    stepper.disableOutputs();
+    Serial.print(F("Motor disabled\n"));
+  }
 }
 
 void moveQuicly(float mm) {
@@ -73,7 +78,7 @@ void moveSlowlyToIndex(long index) {
 }
 
 void setSlow(void) {
-  stepper.setMaxSpeed(LOW_SPEED);
+  stepper.setMaxSpeed(FULL_SPEED);
   stepper.setAcceleration(LOW_ACC);
 }
 

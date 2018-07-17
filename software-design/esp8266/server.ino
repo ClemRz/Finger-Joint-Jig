@@ -44,15 +44,15 @@ void handlePostRoot(void) {
 
 void sendWebPage(void) {
   String out = "";
-  out.concat(F("<!DOCTYPE html><html><head><meta name=viewport content=\"initial-scale=1,maximum-scale=1,user-scalable=no\"><style>html,body{font-family:Arial;font-size:14px;background:#fff;padding:3px;color:#000;margin:0;width:100%;line-height:2em;box-sizing:border-box}section{width:188px;margin:0 auto}fieldset>legend{font-weight:bolder}header,footer{text-align:center}footer{color:#888;font-size:.75rem}.help{font-size:.8rem;font-style:italic;line-height:1em;margin:10px auto}</style></head><body><header><h1>Finger-joint jig</h1></header><section><form method=post><fieldset><legend>Settings</legend><label for=f>Finger:</label><input type=number name=fingerMm id=f min=0 max=285 step=\"0.01\" value=\""));
+  out.concat(F("<!DOCTYPE html><html><head><meta name=viewport content=\"initial-scale=1,maximum-scale=1,user-scalable=no\"><style>html,body{font-family:Arial;font-size:14px;background:#fff;padding:3px;color:#000;margin:0;width:100%;line-height:2em;box-sizing:border-box}section{width:188px;margin:0 auto}fieldset>legend{font-weight:bolder}header,footer{text-align:center}footer{color:#888;font-size:.75rem}.help{font-size:.8rem;font-style:italic;line-height:1em;margin:10px auto}</style></head><body><header><h1>Finger-joint jig</h1></header><section><form method=post><fieldset><legend>Settings</legend><label for=f>Finger:</label><input type=number name=fingerMm id=f min=0 max=307 step=\"0.01\" value=\""));
   out.concat(_register.fingerMm);
-  out.concat(F("\"> mm<br><label for=o>Offset:</label><input type=number name=offsetMm id=o min=0 max=285 step=\"0.01\" value=\""));
+  out.concat(F("\"> mm<br><label for=o>Offset:</label><input type=number name=offsetMm id=o min=0 max=307 step=\"0.01\" value=\""));
   out.concat(_register.offsetMm);
-  out.concat(F("\"> mm<br><label for=k>Kerf:</label><input type=number name=kerfMm id=k min=0 max=285 step=\"0.01\" value=\""));
+  out.concat(F("\"> mm<br><label for=k>Kerf:</label><input type=number name=kerfMm id=k min=0 max=307 step=\"0.01\" value=\""));
   out.concat(_register.kerfMm);
   out.concat(F("\"> mm<br><label for=t>Tolerance:</label><input type=number name=toleranceUm id=t min=0 max=999 step=1 value=\""));
   out.concat(_register.toleranceUm);
-  out.concat(F("\"> &micro;m<br><input type=submit value=Submit></fieldset></form></section><section class=help> Hardware characteristics: <ul><li>Range: 285mm / 14757 steps</li><li>1 mm = 51.779 steps</li><li>1 step = 19&micro;m</li></ul></section><footer> &copy; 2018 Cl&eacute;ment Ronzon </footer></body></html>"));
+  out.concat(F("\"> &micro;m<br><input type=submit value=Submit></fieldset></form></section><section class=help> Hardware characteristics: <ul><li>Range: 307mm / 14757 steps</li><li>1 mm = 48.068 steps</li><li>1 step = 21&micro;m</li></ul></section><footer> &copy; 2018 Cl&eacute;ment Ronzon </footer></body></html>"));
   _server.send(200, F("text/html"), out);
 }
 
