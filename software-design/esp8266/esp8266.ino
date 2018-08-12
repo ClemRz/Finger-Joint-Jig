@@ -52,10 +52,14 @@ Register _register;
 ESP8266WebServer _server(80);
 
 void setup(void) {
+  Serial.begin(115200);
+  Serial.println();
   initFS();
   initI2c();
   startAP();
-  writeArduino(); //TODO check the timing, it may need a delay (Arduino needs to be ready to receive I2C events)
+  delay(500);
+  writeArduino();
+  printRegister();
 }
 
 void loop(void) {
@@ -63,7 +67,7 @@ void loop(void) {
 }
 
 void defaultRegister(void) {
-  _register.kerfMm = 2.39;
+  _register.kerfMm = 2.09;
   _register.fingerMm = 6.0;
   _register.toleranceUm = 150.0;
   _register.offsetMm = 0.0;

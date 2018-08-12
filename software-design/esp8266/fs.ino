@@ -34,6 +34,7 @@ void initFS(void) {
 }
 
 void writeConfig(void) {
+  Serial.print(F("Saving configuration..."));
   File file = SPIFFS.open(CONFIG_FILE_PATH, "w");
   if (file) {
     DynamicJsonBuffer jsonBuffer(JSON_OBJECT_SIZE(156));
@@ -44,10 +45,14 @@ void writeConfig(void) {
     root["o"] = _register.offsetMm;
     root.printTo(file);
     file.close();
+    Serial.println(F("done."));
+  } else {
+    Serial.print(F("Failed to write ")); Serial.println(CONFIG_FILE_PATH);
   }
 }
 
 void readConfig(void) {
+  Serial.print(F("Reading configuration..."));
   File file = SPIFFS.open(CONFIG_FILE_PATH, "r");
   if (file) {
     if(file.available()) {
@@ -57,9 +62,12 @@ void readConfig(void) {
       _register.fingerMm = root["f"];
       _register.toleranceUm = root["t"];
       _register.offsetMm = root["o"];
+      Serial.print(F("..."));
     }
     file.close();
+    Serial.println(F("done."));
   } else {
+    Serial.print(F("Failed to read ")); Serial.println(CONFIG_FILE_PATH);
     defaultRegister();
   }
 }

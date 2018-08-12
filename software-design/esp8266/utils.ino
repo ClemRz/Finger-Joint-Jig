@@ -28,16 +28,10 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-void initI2c(void) {
-  Wire.begin();
+void printRegister(void) {
+  Serial.println(F("Configuration:"));
+  Serial.print(F("  _register.kerfMm: ")); Serial.print(_register.kerfMm); Serial.println(F("mm"));
+  Serial.print(F("  _register.fingerMm: ")); Serial.print(_register.fingerMm); Serial.println(F("mm"));
+  Serial.print(F("  _register.toleranceUm: ")); Serial.print(_register.toleranceUm); Serial.println(F("um"));
+  Serial.print(F("  _register.offsetMm: ")); Serial.print(_register.offsetMm); Serial.println(F("mm"));
 }
-
-void writeArduino(void) {
-  Serial.println(F("Sending configuration to Arduino."));
-  printRegister();
-  Wire.beginTransmission(SLAVE_I2C_ADDRESS);
-  Wire.write(_register.byteAt, REG_MAP_SIZE);
-  Wire.endTransmission();
-  Serial.println(F("Done."));
-}
-

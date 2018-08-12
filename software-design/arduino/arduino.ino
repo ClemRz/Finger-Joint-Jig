@@ -112,7 +112,7 @@ void loop(void) {
 }
 
 void defaultRegister(void) {
-  _v_register.kerfMm = 2.39;
+  _v_register.kerfMm = 2.09;
   _v_register.fingerMm = 6.0;
   _v_register.toleranceUm = 150.0;
   _v_register.offsetMm = 0.0;
