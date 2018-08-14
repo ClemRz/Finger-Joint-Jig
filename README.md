@@ -21,6 +21,13 @@ There are 3 buttons:
   - Center (Un/Lock): toggle the lock "pressure" implied by the stepper
   - Right (Previous): move the jig back to the last known position
 
+2 LEDs allows you to know what's going on:
+
+  - Red LED: either the carriage is in movement or it is unlocked (center button)
+  - Green LED: the carriage is static and locked in place
+
+When the settings are sent to the device (via the virtual UI) the LEDs blink as a confirmation.
+
 ## Software design
 
 There are 3 main elements in this design:
