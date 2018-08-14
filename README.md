@@ -17,9 +17,9 @@ Plug the jig to the power source
 
 There are 3 buttons:
 
-  - Next: move the jig to the next cutting spot
-  - Home: move the jig to the home direction until the limit switch is activated
-  - Previous: move the jig back to the last known position
+  - Left (Next): move the jig to the next cutting spot
+  - Center (Un/Lock): toggle the lock "pressure" implied by the stepper
+  - Right (Previous): move the jig back to the last known position
 
 ## Software design
 
