@@ -44,6 +44,8 @@ The HTML UI is embedded inside the ESP's firmware but you can modify it followin
  
 I used [Fritzing](http://fritzing.org) to draw the electronic diagram (see breadboard below).
 
+And [SketchUp](https://www.sketchup.com/) to draw the mechanic parts (see in the screenshot section).
+
 ## Feel free
 
 If you want to reproduce, modify or enhance my variation of this jig, feel free to do it respecting the licence enclosed in this repo.
@@ -61,3 +63,6 @@ Thanks!
  Electronic design:
  
  ![Circuit](res/circuit_bb.png)
+
+ Mechanic desing:
+ ![Model](res/3d_model.jpg)
